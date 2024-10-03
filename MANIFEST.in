@@ -1,0 +1,2 @@
+include versioneer.py
+include gut_to_soil_manuscript_figures/_version.py
