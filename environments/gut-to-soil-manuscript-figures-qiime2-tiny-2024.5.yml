@@ -6,4 +6,4 @@ dependencies:
   - qiime2-tiny
   - pip
   - pip:
-    - gut_to_soil_manuscript_figures@git+https://github.com/caporaso-lab/gut-to-soil-manuscript-figures.git@main
+    - gut_to_soil_manuscript_figures@git+https://github.com/caporaso-lab/gut-to-soil-manuscript-figures.git
