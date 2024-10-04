@@ -36,7 +36,6 @@ def pcoa_2d(output_dir: str, metadata: qiime2.Metadata,
             'scripts/plot_pcoa_2d.py'
         )
 
-    # Convert boolean parameters to strings
     average = str(average)
     week_annotations = str(week_annotations)
     invert_x = str(invert_x)
