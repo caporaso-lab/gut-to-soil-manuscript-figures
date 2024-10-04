@@ -346,7 +346,7 @@ def plot_pcoa_2d(metadata_fp, ordination_fp, measure,
     # Food Compost
     food_compost_scatter = plt.scatter(x=x_compost, y=y_compost,
                                        facecolors='r',
-                                       label='Food and Yard Waste Compost')
+                                       label='FLWC')
 
     # (OPTIONAL SAMPLE TYPES) Himalaya
     if himalaya == 'True':
