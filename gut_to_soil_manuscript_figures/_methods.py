@@ -17,10 +17,11 @@ import qiime2
 def pcoa_2d(output_dir: str, metadata: qiime2.Metadata,
             ordination: skbio.OrdinationResults,
             measure: str = 'Unweighted Unifrac',
-            average: bool = False, week_annotations: bool = True,
-            invert_x: bool = True, invert_y: bool = True,
+            average: bool = False, week_annotations: bool = False,
+            invert_x: bool = False, invert_y: bool = False,
             swap_axes: bool = False, himalaya: bool = False,
-            pit_toilet: bool = False, highlighted_buckets: str = ''):
+            pit_toilet: bool = False, export_legend: bool = False,
+            highlighted_buckets: str = ''):
 
     md = metadata.to_dataframe()
 
@@ -43,8 +44,12 @@ def pcoa_2d(output_dir: str, metadata: qiime2.Metadata,
     swap_axes = str(swap_axes)
     himalaya = str(himalaya)
     pit_toilet = str(pit_toilet)
+    export_legend = str(export_legend)
 
     plot_fp = os.path.join(output_dir, 'pcoa_plot.png')
+
+    if export_legend:
+        legend_fp = os.path.join(output_dir, 'legend.png')
 
     command = [
         'python', script_path,
@@ -59,19 +64,21 @@ def pcoa_2d(output_dir: str, metadata: qiime2.Metadata,
         swap_axes,
         himalaya,
         pit_toilet,
-        highlighted_buckets
+        export_legend,
+        highlighted_buckets,
+        legend_fp
     ]
     subprocess.run(command, check=True)
 
     with open(os.path.join(output_dir, 'index.html'), 'w') as f:
-        f.write(f'''
+        f.write('''
         <!DOCTYPE html>
         <html>
         <head>
-            <title>2D {measure} PCoA Plot</title>
+            <title>2D PCoA Plot</title>
         </head>
         <body>
-            <h1>2D {measure} PCoA Plot</h1>
+            <h1>2D PCoA Plot</h1>
             <img src="pcoa_plot.png" alt="PCoA Plot">
         </body>
         </html>

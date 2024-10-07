@@ -29,9 +29,9 @@ def _bucket_util(highlighted_buckets, md, ord_2d):
     # handles multiple buckets being entered via command line/jupyter notebook
     # entire input for this command is a string, split on commas
     if ',' in highlighted_buckets:
-        bucket_list = [float(x) for x in highlighted_buckets.split(',')]
+        bucket_list = [int(x) for x in highlighted_buckets.split(',')]
     else:
-        bucket_list = [float(highlighted_buckets)]
+        bucket_list = [int(highlighted_buckets)]
 
     # empty dicts to be filled with details for each bucket's time series
     # details & then starting details (i.e. HE & bulking)
@@ -105,10 +105,10 @@ def _bucket_util(highlighted_buckets, md, ord_2d):
 
 # MAIN METHOD #
 def plot_pcoa_2d(metadata_fp, ordination_fp, measure,
-                 average, week_annotations, save_as,
+                 average, week_annotations, plot_fp,
                  invert_x, invert_y, swap_axes,
-                 himalaya, pit_toilet,
-                 highlighted_buckets=None):
+                 himalaya, pit_toilet, export_legend,
+                 highlighted_buckets=None, legend_fp=None):
 
     ord_rslts = skbio.OrdinationResults.read(str(ordination_fp))
     ord_2d = ord_rslts.samples.iloc[:, 0:2]
@@ -301,18 +301,18 @@ def plot_pcoa_2d(metadata_fp, ordination_fp, measure,
     fecal_scatter = \
         plt.scatter(x=x_fecal, y=y_fecal, facecolors='none',
                     edgecolors='tab:brown',
-                    label='HE (other subjects)')
+                    label='HE (other buckets)')
 
     # Bulking Material - all subjects
     bulking_scatter = \
         plt.scatter(x=x_bulking, y=y_bulking, facecolors='none',
-                    edgecolors='g', label='Bulking Material (other subjects)')
+                    edgecolors='g', label='Bulking Material (other buckets)')
 
     # All buckets (minus highlighted bucket(s))
     all_sample_buckets = \
         plt.scatter(x=x_buckets, y=y_buckets, facecolors='none',
                     edgecolors='#C5C9C7', marker='^',
-                    label='HEC (other subjects)')
+                    label='HEC (other buckets)')
 
     # (OPTIONAL) Weekly Mean for all Buckets
     if average == 'True':
@@ -400,12 +400,12 @@ def plot_pcoa_2d(metadata_fp, ordination_fp, measure,
 
             HE_week0_scatter = \
                 plt.scatter(x=x0_HE, y=y0_HE, facecolors='tab:brown',
-                            label=f'HE (Subject #{bucket})')
+                            label=f'HE (Bucket #{bucket})')
             bucket_handles.append(HE_week0_scatter)
 
             bulk_week0_scatter = \
                 plt.scatter(x=x0_bulk, y=y0_bulk, facecolors='g',
-                            label=f'Bulking Material (Subject #{bucket})')
+                            label=f'Bulking Material (Bucket #{bucket})')
             bucket_handles.append(bulk_week0_scatter)
 
         for bucket, ids in buckets_dict.items():
@@ -417,7 +417,7 @@ def plot_pcoa_2d(metadata_fp, ordination_fp, measure,
                 plt.scatter(x=x_bucket, y=y_bucket,
                             facecolors=viridis(color_dict[bucket]),
                             edgecolors='k', marker='^',
-                            label=f'HEC (Subject #{bucket})')
+                            label=f'HEC (Bucket #{bucket})')
 
             bucket_handles.append(highlighted_bucket_scatter)
             bucket_nums.append(bucket)
@@ -476,27 +476,30 @@ def plot_pcoa_2d(metadata_fp, ordination_fp, measure,
                     '--', color='#C5C9C7', linewidth=0.75, zorder=2)
 
     # Adding title, labels & legend details
-    plt.gca().set(xlabel=f'PCOA {x_label}', ylabel=f'PCOA {y_label}',
-                  title=f'2D {measure} for Subject(s) {bucket_nums}',
-                  label='Subject#')
+    plt.gca().set(xlabel=f'PCoA {x_label}', ylabel=f'PCoA {y_label}',
+                  title=f'{measure} for Bucket(s) {bucket_nums}',
+                  label='Bucket#')
 
-    # HELPER METHOD FOR EXPORTING LEGEND AS A SEPARATE FIGURE - leave as-is
-    # ax.set_title('Subject 10.0', loc='left')
+    # Helper method for exporting legend as a separate figure
+    def _export_legend(legend, filename=legend_fp):
+        fig = legend.figure
+        fig.canvas.draw()
+        bbox = legend.get_window_extent().transformed(
+            fig.dpi_scale_trans.inverted())
+        fig.savefig(filename, dpi='figure', bbox_inches=bbox)
 
-    # def export_legend(legend, filename='legend.png'):
-    #     fig = legend.figure
-    #     fig.canvas.draw()
-    #     bbox = legend.get_window_extent().transformed(
-    #         fig.dpi_scale_trans.inverted())
-    #     fig.savefig(filename, dpi='figure', bbox_inches=bbox)
+    # Create the legend
+    legend = plt.legend(handles=bucket_handles, bbox_to_anchor=(1.1, 1.05))
 
-    # legend = plt.legend(handles=bucket_handles, fontsize=12)
-    # export_legend(legend)
-    # legend.remove()
+    if export_legend == 'True':
+        _export_legend(legend, legend_fp)
+        legend.remove()
+    else:
+        legend.set_bbox_to_anchor((1.1, 1.05))
 
-    plt.legend(handles=bucket_handles, bbox_to_anchor=(1.1, 1.05))
+    # Save the main plot
     plt.tight_layout()
-    plt.savefig(str(save_as), bbox_inches='tight')
+    plt.savefig(str(plot_fp), bbox_inches='tight')
 
 
 if __name__ == '__main__':
@@ -505,16 +508,18 @@ if __name__ == '__main__':
     measure = sys.argv[3]
     average = sys.argv[4]
     week_annotations = sys.argv[5]
-    save_as = sys.argv[6]
+    plot_fp = sys.argv[6]
     invert_x = sys.argv[7]
     invert_y = sys.argv[8]
     swap_axes = sys.argv[9]
     himalaya = sys.argv[10]
     pit_toilet = sys.argv[11]
-    highlighted_buckets = sys.argv[12]
+    export_legend = sys.argv[12]
+    highlighted_buckets = sys.argv[13]
+    legend_fp = sys.argv[14]
 
     plot_pcoa_2d(metadata_fp, ordination_fp, measure,
-                 average, week_annotations, save_as,
+                 average, week_annotations, plot_fp,
                  invert_x, invert_y, swap_axes,
-                 himalaya, pit_toilet,
-                 highlighted_buckets)
+                 himalaya, pit_toilet, export_legend,
+                 highlighted_buckets, legend_fp)

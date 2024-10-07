@@ -20,11 +20,7 @@ plugin = Plugin(
     package='gut_to_soil_manuscript_figures',
     description="Plugin that contains methods for figure generation used in"
                 " Jeff Meilander's PhD manuscript.",
-    short_description='',
-    # The plugin-level citation of 'Caporaso-Bolyen-2024' is provided as
-    # an example. You can replace this with citations to other references
-    # in citations.bib.
-    # citations=[citations['Caporaso-Bolyen-2024']]
+    short_description=''
 )
 
 plugin.visualizers.register_function(
@@ -40,6 +36,7 @@ plugin.visualizers.register_function(
         'swap_axes': Bool,
         'himalaya': Bool,
         'pit_toilet': Bool,
+        'export_legend': Bool,
         'highlighted_buckets': Str
     },
     input_descriptions={},
