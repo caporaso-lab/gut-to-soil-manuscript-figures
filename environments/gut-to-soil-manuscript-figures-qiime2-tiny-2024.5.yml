@@ -1,9 +1,11 @@
 channels:
 - https://packages.qiime2.org/qiime2/2024.5/tiny/passed
+- https://packages.qiime2.org/qiime2/2024.5/amplicon/passed
 - conda-forge
 - bioconda
 dependencies:
   - qiime2-tiny
+  - q2-diversity
   - pip
   - pip:
     - gut_to_soil_manuscript_figures@git+https://github.com/caporaso-lab/gut-to-soil-manuscript-figures.git
