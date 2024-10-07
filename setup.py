@@ -11,28 +11,31 @@ from setuptools import find_packages, setup
 import versioneer
 
 description = (
-    "Plugin template."
+    'Plugin template.'
 )
 
 setup(
-    name="gut-to-soil-manuscript-figures",
+    name='gut-to-soil-manuscript-figures',
     version=versioneer.get_version(),
     cmdclass=versioneer.get_cmdclass(),
-    license="BSD-3-Clause",
+    license='BSD-3-Clause',
     packages=find_packages(),
-    author="Liz Gehret",
-    author_email="elizabeth.gehret@nau.edu",
+    author='Liz Gehret',
+    author_email='elizabeth.gehret@nau.edu',
     description=description,
-    url="https://github.com/caporaso-lab/gut-to-coil-manuscript-figures/",
+    url='https://github.com/caporaso-lab/gut-to-soil-manuscript-figures/',
     entry_points={
-        "qiime2.plugins": [
-            "gut_to_soil_manuscript_figures="
-            "gut_to_soil_manuscript_figures"
-            ".plugin_setup:plugin"]
+        'qiime2.plugins': [
+            'gut-to-soil-manuscript-figures='
+            'gut_to_soil_manuscript_figures'
+            '.plugin_setup:plugin']
     },
     package_data={
-        "gut_to_soil_manuscript_figures": ["citations.bib"],
-        "gut_to_soil_manuscript_figures.tests": ["data/*"],
+        'gut_to_soil_manuscript_figures': [
+            'citations.bib',
+            'scripts/*'
+        ],
+        'gut_to_soil_manuscript_figures.tests': ['data/*'],
     },
     zip_safe=False,
 )
