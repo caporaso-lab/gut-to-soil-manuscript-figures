@@ -4,10 +4,6 @@ A [QIIME 2](https://qiime2.org) plugin [developed](https://develop.qiime2.org) b
 
 ## Installation instructions
 
-**The following instructions are intended to be a starting point** and should be replaced when `gut-to-soil-manuscript-figures` is ready to share with others.
-They will enable you to install the most recent *development* version of `gut-to-soil-manuscript-figures`.
-Remember that *release* versions should be used for all "real" work (i.e., where you're not testing or prototyping) - if there aren't instructions for installing a release version of this plugin, it is probably not yet intended for use in practice.
-
 ### Install Prerequisites
 
 [Miniconda](https://conda.io/miniconda.html) provides the `conda` environment and package manager, and is currently the only supported way to install QIIME 2.
@@ -22,64 +18,92 @@ conda update conda
 ###  Install development version of `gut-to-soil-manuscript-figures`
 
 Next, you need to get into the top-level `gut-to-soil-manuscript-figures` directory.
-If you already have this (e.g., because you just created the plugin), this may be as simple as running `cd gut-to-soil-manuscript-figures`.
-If not, you'll need the `gut-to-soil-manuscript-figures` directory on your computer.
-How you do that will differ based on how the package is shared, and ideally the developer will update these instructions to be more specific (remember, these instructions are intended to be a starting point).
-For example, if it's maintained in a GitHub repository, you can achieve this by [cloning the repository](https://docs.github.com/en/repositories/creating-and-managing-repositories/cloning-a-repository).
-Once you have the directory on your computer, change (`cd`) into it.
+You can achieve this by [cloning the repository](https://docs.github.com/en/repositories/creating-and-managing-repositories/cloning-a-repository).
+Once you have the repository on your computer, change (`cd gut-to-soil-manuscript-figures`) into the local directory.
 
-If you're in a conda environment, deactivate it by running `conda deactivate`.
+If you're in an existing conda environment, deactivate it by running `conda deactivate`.
 
 
 Then, run:
 
 ```shell
-conda env create -n gut-to-soil-manuscript-figures-dev --file ./environments/gut-to-soil-manuscript-figures-qiime2-tiny-2024.5.yml
+conda env create -n gts-manuscript-figs-dev --file ./environments/gut-to-soil-manuscript-figures-qiime2-tiny-2024.5.yml
 ```
 
 After this completes, activate the new environment you created by running:
 
 ```shell
-conda activate gut-to-soil-manuscript-figures-dev
+conda activate gts-manuscript-figs-dev
 ```
-
-Finally, run:
-
-```shell
-make install
-```
-
-## Testing and using the most recent development version of `gut-to-soil-manuscript-figures`
 
 After completing the install steps above, confirm that everything is working as expected by running:
-
-```shell
-make test
-```
-
-You should get a report that tests were run, and you should see that all tests passed and none failed.
-It's usually ok if some warnings are reported.
-
-If all of the tests pass, you're ready to use the plugin.
-Start by making QIIME 2's command line interface aware of `gut-to-soil-manuscript-figures` by running:
-
-```shell
-qiime dev refresh-cache
-```
-
-You should then see the plugin in the list of available plugins if you run:
 
 ```shell
 qiime info
 ```
 
+This will provide you with a sanity check for the expected packages within your conda environment.
+
+You should see the following system info:
+```
+Python version: 3.9
+QIIME 2 release: 2024.5
+QIIME 2 version: 2024.5.1
+q2cli version: 2024.5.0
+```
+
+Additionally, you should see the following list of plugins present:
+```
+diversity
+diversity-lib
+emperor
+feature-table
+gut-to-soil-manuscript-figures
+metadata
+types
+```
+
+If all of the above matches what you're seeing locally, you're ready to use this plugin!
+
 You should be able to review the help text by running:
 
 ```shell
-qiime gut-to-soil-manuscript-figures --help
+qiime gut-to-soil-manuscript-figures pcoa-2d --help
 ```
 
-Have fun! 😎
+Here's an example workflow, based on what was used to generate the PCoA figures in Jeff Meilander's manuscript.
+
+Your first step will be filtering the distance matrix you'd like to use for the PCoA plot so that it only contains the sample types of interest.
+```
+qiime diversity filter-distance-matrix \
+--i-distance-matrix unweighted-unifrac-distance-matrix.qza \
+--m-metadata-file final-analysis-metadata.tsv \
+--p-where "[SampleType2] IN ('EMP-Soils', 'Food-Compost', 'Self Sample', 'Compost Post-Roll', 'Bulking Material')" \
+--o-filtered-distance-matrix filtered-unweighted-unifrac-distance-matrix.qza
+```
+
+Next, you'll turn this distance matrix into a two-dimensional PCoAResults object, which will be used as input for the pcoa plot.
+```
+qiime diversity pcoa \
+--i-distance-matrix filtered-unweighted-unifrac-distance-matrix.qza \
+--p-number-of-dimensions 2 \
+--o-pcoa filtered-unweighted-unifrac-2d-pcoa.qza
+```
+
+Now we're ready to generate a pcoa plot!
+```
+qiime gut-to-soil-manuscript-figures pcoa-2d \
+--i-ordination filtered-unweighted-unifrac-2d-pcoa.qza \
+--m-metadata-file final-analysis-metadata.tsv \
+--p-measure 'Unweighted Unifrac' \
+--p-average \
+--p-export-legend \
+--p-highlighted-buckets '3, 4' \
+--o-visualization buckets34-pcoa.qzv
+```
+
+Note that all of the above filenames were used as an example.
+Please replace the inputs with your specific distance matrix and metadata files!
 
 ## About
 
