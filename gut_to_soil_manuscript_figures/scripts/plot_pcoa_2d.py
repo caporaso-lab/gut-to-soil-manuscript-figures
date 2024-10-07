@@ -142,7 +142,7 @@ def plot_pcoa_2d(metadata_fp, ordination_fp, measure,
 
     # allowed sample types to be pulled from the md
     sample_types = ['EMP-Soils', 'Food-Compost', 'Self Sample',
-                    'Compost Post-Roll', 'Bulking Material', 'Pit Toilet']
+                    'Compost Post-Roll', 'Bulking Material']
 
     # if using himalaya and/or pit toilet data
     if himalaya == 'True':
