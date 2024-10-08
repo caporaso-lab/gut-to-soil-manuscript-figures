@@ -44,12 +44,11 @@ def pcoa_2d(output_dir: str, metadata: qiime2.Metadata,
     swap_axes = str(swap_axes)
     himalaya = str(himalaya)
     pit_toilet = str(pit_toilet)
-    export_legend = str(export_legend)
+    export_legend_str = str(export_legend)
 
     plot_fp = os.path.join(output_dir, 'pcoa_plot.png')
 
-    if export_legend:
-        legend_fp = os.path.join(output_dir, 'legend.png')
+    legend_fp = os.path.join(output_dir, 'legend.png')
 
     command = [
         'python', script_path,
@@ -64,7 +63,7 @@ def pcoa_2d(output_dir: str, metadata: qiime2.Metadata,
         swap_axes,
         himalaya,
         pit_toilet,
-        export_legend,
+        export_legend_str,
         highlighted_buckets,
         legend_fp
     ]
@@ -80,6 +79,13 @@ def pcoa_2d(output_dir: str, metadata: qiime2.Metadata,
         <body>
             <h1>2D PCoA Plot</h1>
             <img src="pcoa_plot.png" alt="PCoA Plot">
+        ''')
+        if export_legend:
+            f.write('''
+                    <p>
+                    <img src="legend.png" alt="PCoA Plot legend">
+                    ''')
+        f.write('''
         </body>
         </html>
         ''')
