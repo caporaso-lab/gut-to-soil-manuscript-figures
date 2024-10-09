@@ -44,7 +44,7 @@ def pcoa_2d(output_dir: str, metadata: qiime2.Metadata,
     swap_axes = str(swap_axes)
     himalaya = str(himalaya)
     pit_toilet = str(pit_toilet)
-    export_legend_str = str(export_legend)
+    export_legend = str(export_legend)
 
     plot_fp = os.path.join(output_dir, 'pcoa_plot.png')
 
