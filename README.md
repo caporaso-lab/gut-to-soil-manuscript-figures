@@ -78,7 +78,7 @@ Your first step will be filtering the distance matrix you'd like to use for the 
 qiime diversity filter-distance-matrix \
 --i-distance-matrix unweighted-unifrac-distance-matrix.qza \
 --m-metadata-file final-analysis-metadata.tsv \
---p-where "[SampleType2] IN ('EMP-Soils', 'Food-Compost', 'Self Sample', 'Compost Post-Roll', 'Bulking Material')" \
+--p-where "[SampleType] IN ('Soil', 'Food Compost', 'Landscape Compost', 'Human Excrement', 'Human Excrement Compost', 'Bulking Material')" \
 --o-filtered-distance-matrix filtered-unweighted-unifrac-distance-matrix.qza
 ```
 
@@ -95,7 +95,7 @@ Now we're ready to generate a pcoa plot!
 qiime gut-to-soil-manuscript-figures pcoa-2d \
 --i-ordination filtered-unweighted-unifrac-2d-pcoa.qza \
 --m-metadata-file final-analysis-metadata.tsv \
---p-measure 'Unweighted Unifrac' \
+--p-measure 'Unweighted UniFrac' \
 --p-average \
 --p-export-legend \
 --p-highlighted-buckets '3, 4' \
