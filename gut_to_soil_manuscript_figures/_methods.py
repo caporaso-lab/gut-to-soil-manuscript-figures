@@ -48,7 +48,6 @@ def pcoa_2d(output_dir: str, metadata: qiime2.Metadata,
 
     plot_fp = os.path.join(output_dir, 'pcoa_plot.png')
 
-    legend_fp = os.path.join(output_dir, 'legend.png')
 
     command = [
         'python', script_path,
