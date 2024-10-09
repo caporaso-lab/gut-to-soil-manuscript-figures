@@ -79,7 +79,8 @@ def pcoa_2d(output_dir: str, metadata: qiime2.Metadata,
             <h1>2D PCoA Plot</h1>
             <img src="pcoa_plot.png" alt="PCoA Plot">
         ''')
-        if export_legend:
+        if export_legend == 'True':
+            legend_fp = os.path.join(output_dir, 'legend.png')
             f.write('''
                     <p>
                     <img src="legend.png" alt="PCoA Plot legend">
