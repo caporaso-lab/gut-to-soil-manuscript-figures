@@ -63,7 +63,8 @@ def _bucket_util(highlighted_buckets, md, ord_2d):
         # HE
         bucket_ids_HE_week0 = \
             md[(md['Bucket'] == bucket) &
-               (md['SampleType'] == 'Human Excrement')].index.values
+               (md['SampleType'] == 'Human Excrement') &
+               (md['Composting Time Point']).isna()].index.values
 
         ids_HE_week0 = []
         for i in bucket_ids_HE_week0:
@@ -73,7 +74,8 @@ def _bucket_util(highlighted_buckets, md, ord_2d):
         # bulking
         bucket_ids_bulk_week0 = \
             md[(md['Bucket'] == bucket) &
-               (md['SampleType'] == 'Bulking Material')].index.values
+               (md['SampleType'] == 'Bulking Material') &
+               (md['Composting Time Point']).isna()].index.values
 
         ids_bulk_week0 = []
         for i in bucket_ids_bulk_week0:
@@ -235,7 +237,8 @@ def plot_pcoa_2d(metadata_fp, ordination_fp, measure,
         if not highlighted_buckets:
             # HE wk 0 mean
             HE_week0 = \
-                md[(md['SampleType'] == 'Human Excrement')].index.values
+                md[(md['SampleType'] == 'Human Excrement') &
+                   (md['Composting Time Point']).isna()].index.values
             ids_HE_week0 = []
             for i in HE_week0:
                 if i in ord_2d.index.values:
@@ -246,7 +249,8 @@ def plot_pcoa_2d(metadata_fp, ordination_fp, measure,
 
             # bulk wk 0 mean
             bulk_week0 = \
-                md[(md['SampleType'] == 'Bulking Material')].index.values
+                md[(md['SampleType'] == 'Bulking Material') &
+                   (md['Composting Time Point']).isna()].index.values
             ids_bulk_week0 = []
             for i in bulk_week0:
                 if i in ord_2d.index.values:
