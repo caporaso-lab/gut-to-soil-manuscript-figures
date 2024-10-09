@@ -63,7 +63,7 @@ def pcoa_2d(output_dir: str, metadata: qiime2.Metadata,
         swap_axes,
         himalaya,
         pit_toilet,
-        export_legend_str,
+        export_legend,
         highlighted_buckets,
         legend_fp
     ]
