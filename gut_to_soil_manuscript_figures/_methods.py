@@ -47,7 +47,8 @@ def pcoa_2d(output_dir: str, metadata: qiime2.Metadata,
     export_legend = str(export_legend)
 
     plot_fp = os.path.join(output_dir, 'pcoa_plot.png')
-
+    if export_legend == 'True':
+        legend_fp = os.path.join(output_dir, 'legend.png')
 
     command = [
         'python', script_path,
@@ -80,7 +81,6 @@ def pcoa_2d(output_dir: str, metadata: qiime2.Metadata,
             <img src="pcoa_plot.png" alt="PCoA Plot">
         ''')
         if export_legend == 'True':
-            legend_fp = os.path.join(output_dir, 'legend.png')
             f.write('''
                     <p>
                     <img src="legend.png" alt="PCoA Plot legend">
