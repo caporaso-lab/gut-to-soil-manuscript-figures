@@ -43,11 +43,12 @@ def _bucket_util(highlighted_buckets, md, ord_2d):
         # connecting time series data in order
         md_bucket_sorted = \
             md[(md['Bucket'] == bucket) &
-               (md['SampleType2'] == 'Compost Post-Roll')].sort_values('Week')
+               (md['SampleType'] == 'Human Excrement Compost')].\
+            sort_values('Composting Time Point')
 
         # week 1-52 IDs for selected bucket
-        bucket_ids_sorted = \
-            md_bucket_sorted[md_bucket_sorted['Week'] > 0.0].index.values
+        bucket_ids_sorted = md_bucket_sorted[
+            md_bucket_sorted['Composting Time Point'] > 0.0].index.values
 
         # making sure bucket IDs used are only ones that are present in both
         # the md and ordination results
@@ -62,8 +63,8 @@ def _bucket_util(highlighted_buckets, md, ord_2d):
         # HE
         bucket_ids_HE_week0 = \
             md[(md['Bucket'] == bucket) &
-               (md['SampleType2'] == 'Self Sample') &
-               (md['Week'] == 0.0)].index.values
+               (md['SampleType'] == 'Human Excrement') &
+               (md['Composting Time Point']).isna()].index.values
 
         ids_HE_week0 = []
         for i in bucket_ids_HE_week0:
@@ -73,8 +74,8 @@ def _bucket_util(highlighted_buckets, md, ord_2d):
         # bulking
         bucket_ids_bulk_week0 = \
             md[(md['Bucket'] == bucket) &
-               (md['SampleType2'] == 'Bulking Material') &
-               (md['Week'] == 0.0)].index.values
+               (md['SampleType'] == 'Bulking Material') &
+               (md['Composting Time Point']).isna()].index.values
 
         ids_bulk_week0 = []
         for i in bucket_ids_bulk_week0:
@@ -82,8 +83,8 @@ def _bucket_util(highlighted_buckets, md, ord_2d):
                 ids_bulk_week0.append(i)
 
         # week 1 i.e. end points for dotted line connecting HE & BM -> HEC
-        bucket_ids_HEC_week1 = \
-            md_bucket_sorted[md_bucket_sorted['Week'] == 1.0].index.values
+        bucket_ids_HEC_week1 = md_bucket_sorted[
+            md_bucket_sorted['Composting Time Point'] == 1.0].index.values
 
         ids_HEC_week1 = []
         for i in bucket_ids_HEC_week1:
@@ -141,8 +142,9 @@ def plot_pcoa_2d(metadata_fp, ordination_fp, measure,
         ord_2d[1] = ord_2d[1].multiply(-1)
 
     # allowed sample types to be pulled from the md
-    sample_types = ['EMP-Soils', 'Food-Compost', 'Self Sample',
-                    'Compost Post-Roll', 'Bulking Material']
+    sample_types = ['Soil', 'Food Compost', 'Landscape Compost',
+                    'Human Excrement', 'Human Excrement Compost',
+                    'Bulking Material']
 
     # if using himalaya and/or pit toilet data
     if himalaya == 'True':
@@ -151,21 +153,23 @@ def plot_pcoa_2d(metadata_fp, ordination_fp, measure,
         sample_types.append('Pit Toilet')
 
     # sorting the filtered md (by allowed sample types) by week
-    md = metadata[metadata['SampleType2']
-                  .isin(sample_types)].sort_values('Week')
+    md = metadata[metadata['SampleType']
+                  .isin(sample_types)].sort_values('Composting Time Point')
     md['Bucket'] = md['Bucket'].astype(float)
-    md['Week'] = md['Week'].astype(float)
+    md['Composting Time Point'] = md['Composting Time Point'].astype(float)
 
     buckets_md = md[md['Bucket'].between(1, 16)]
 
     # ALL SUBJECT FECAL SAMPLES: IDs -> XY ordination points
-    fecal_ids = list(set(buckets_md[buckets_md['Week'] == 0.0].index.values) &
-                     set(ord_2d.index.values))
+    fecal_ids = list(
+        set(buckets_md[buckets_md['SampleType'] == 'Human Excrement']
+            .index.values) &
+        set(ord_2d.index.values))
     x_fecal, y_fecal = _swap_axis(ord_2d, fecal_ids, swap_axes)
 
     # ALL SUBJECT BULKING MATERIAL: IDs -> XY ordination points
     bulking_ids = \
-        list(set(md[md['SampleType2'] == 'Bulking Material'].index.values) &
+        list(set(md[md['SampleType'] == 'Bulking Material'].index.values) &
              set(ord_2d.index.values))
     x_bulking, y_bulking = _swap_axis(ord_2d, bulking_ids, swap_axes)
 
@@ -176,8 +180,8 @@ def plot_pcoa_2d(metadata_fp, ordination_fp, measure,
 
     # (OPTIONAL) WEEKLY MEAN FOR ALL BUCKETS: IDs -> XY ordination points
     if average == 'True':
-        weeks_md = md[md['Week'].between(1, 52)]
-        weeks = list(set(weeks_md['Week'].values))
+        weeks_md = md[md['Composting Time Point'].between(1, 52)]
+        weeks = list(set(weeks_md['Composting Time Point'].values))
 
         # dicts for each week's mean x&y values
         bucket_weekly_avgs_x = {}
@@ -188,9 +192,9 @@ def plot_pcoa_2d(metadata_fp, ordination_fp, measure,
             y_list = []
 
             # filtering the md to only include post-roll sample types
-            weekly_bucket_ids = \
-                md[(md['Week'] == week) &
-                    (md['SampleType2'] == 'Compost Post-Roll')].index.values
+            weekly_bucket_ids = md[
+                (md['Composting Time Point'] == week) &
+                (md['SampleType'] == 'Human Excrement Compost')].index.values
 
             # only use IDs that are present both in the md and ordination
             included_ids = []
@@ -233,8 +237,8 @@ def plot_pcoa_2d(metadata_fp, ordination_fp, measure,
         if not highlighted_buckets:
             # HE wk 0 mean
             HE_week0 = \
-                md[(md['SampleType2'] == 'Self Sample') &
-                   (md['Week'] == 0.0)].index.values
+                md[(md['SampleType'] == 'Human Excrement') &
+                   (md['Composting Time Point']).isna()].index.values
             ids_HE_week0 = []
             for i in HE_week0:
                 if i in ord_2d.index.values:
@@ -245,8 +249,8 @@ def plot_pcoa_2d(metadata_fp, ordination_fp, measure,
 
             # bulk wk 0 mean
             bulk_week0 = \
-                md[(md['SampleType2'] == 'Bulking Material') &
-                   (md['Week'] == 0.0)].index.values
+                md[(md['SampleType'] == 'Bulking Material') &
+                   (md['Composting Time Point']).isna()].index.values
             ids_bulk_week0 = []
             for i in bulk_week0:
                 if i in ord_2d.index.values:
@@ -256,11 +260,10 @@ def plot_pcoa_2d(metadata_fp, ordination_fp, measure,
             y0_bulk_mean = np.mean(y0_bulk)
 
     # ALL BUCKETS (minus highlighted bucket(s))
-    all_bucket_ids_w_fecal = \
-        list(set(md[md['Bucket'].between(1, 16)].index.values) &
-             set(ord_2d.index.values))
-    all_bucket_ids = list(set(all_bucket_ids_w_fecal) - set(fecal_ids))
-
+    all_bucket_ids = \
+        list(set(md[md['Bucket'].between(1, 16)].index) &
+             set(md[md['SampleType'] == 'Human Excrement Compost'].index) &
+             set(ord_2d.index))
     if highlighted_buckets:
         bucket_ids = list(set(all_bucket_ids) - bucket_set)
     else:
@@ -268,13 +271,14 @@ def plot_pcoa_2d(metadata_fp, ordination_fp, measure,
     x_buckets, y_buckets = _swap_axis(ord_2d, bucket_ids, swap_axes)
 
     # EMP SOILS
-    emp_ids = md.loc[md['Bucket'] == 0.0].index.values
+    emp_ids = md.loc[md['SampleType'] == 'Soil'].index.values
     x_emp, y_emp = _swap_axis(ord_2d, emp_ids, swap_axes)
 
     # FOOD COMPOST
     compost_ids = \
-        list(set(md.loc[md['Bucket'] == 17.0].index.values) &
-             set(ord_2d.index.values))
+        list(set(md.loc[(md['SampleType'] == 'Food Compost') |
+                        (md['SampleType'] == 'Landscape Compost')].index.values)
+             & set(ord_2d.index.values))
     x_compost, y_compost = _swap_axis(ord_2d, compost_ids, swap_axes)
 
     # (OPTIONAL SAMPLE TYPES) HIMALAYA
@@ -306,7 +310,8 @@ def plot_pcoa_2d(metadata_fp, ordination_fp, measure,
     # Bulking Material - all subjects
     bulking_scatter = \
         plt.scatter(x=x_bulking, y=y_bulking, facecolors='none',
-                    edgecolors='g', label='Bulking Material (other buckets)')
+                    edgecolors='g',
+                    label='Bulking Material (other buckets)')
 
     # All buckets (minus highlighted bucket(s))
     all_sample_buckets = \
@@ -320,7 +325,8 @@ def plot_pcoa_2d(metadata_fp, ordination_fp, measure,
             plt.scatter(x=bucket_weekly_avgs_x.values(),
                         y=bucket_weekly_avgs_y.values(),
                         marker='*', facecolors='#1f77b4',
-                        s=100, label='HEC (Weekly Mean)')
+                        s=100,
+                        label='HEC (Weekly Mean)')
 
         # adding HE mean if only plotting the weekly mean
         # (w/o any highlighted bucket(s))
@@ -341,7 +347,8 @@ def plot_pcoa_2d(metadata_fp, ordination_fp, measure,
 
     # EMP Soil
     emp_soil_scatter = plt.scatter(x=x_emp, y=y_emp,
-                                   facecolors='k', label='Soil')
+                                   facecolors='k',
+                                   label='Soil')
 
     # Food Compost
     food_compost_scatter = plt.scatter(x=x_compost, y=y_compost,
@@ -351,12 +358,14 @@ def plot_pcoa_2d(metadata_fp, ordination_fp, measure,
     # (OPTIONAL SAMPLE TYPES) Himalaya
     if himalaya == 'True':
         himalaya_scatter = plt.scatter(x=x_hima, y=y_hima,
-                                       facecolors='b', label='Himalaya')
+                                       facecolors='b',
+                                       label='Himalaya')
 
     # (OPTIONAL SAMPLE TYPES) Pit Toilet
     if pit_toilet == 'True':
         pit_toilet_scatter = plt.scatter(x=x_pt, y=y_pt,
-                                         facecolors='y', label='Pit Toilet')
+                                         facecolors='y',
+                                         label='Pit Toilet')
 
     # collecting the handle info to add to the legend
     bucket_handles = []
@@ -424,7 +433,7 @@ def plot_pcoa_2d(metadata_fp, ordination_fp, measure,
 
             # adding week annotations for each highlighted bucket
             if week_annotations == 'True':
-                for week, x, y in zip((md.loc[ids]['Week']),
+                for week, x, y in zip((md.loc[ids]['Composting Time Point']),
                                       x_bucket, y_bucket):
                     week_int = int(week)
                     ax.annotate(str(week_int), weight='bold', color='purple',
@@ -475,9 +484,16 @@ def plot_pcoa_2d(metadata_fp, ordination_fp, measure,
             ax.plot([x0_bulk_mean, x1_mean], [y0_bulk_mean, y1_mean],
                     '--', color='#C5C9C7', linewidth=0.75, zorder=2)
 
+    # handling title text for buckets depending on bucket highlighting
+    if len(bucket_nums) == 0:
+        bucket_title_text = f'{measure} (all Buckets)'
+    elif len(bucket_nums) == 1:
+        bucket_title_text = f'{measure} for Bucket {bucket_nums}'
+    elif len(bucket_nums) > 1:
+        bucket_title_text = f'{measure} for Buckets {sorted(bucket_nums)}'
     # Adding title, labels & legend details
     plt.gca().set(xlabel=f'PCoA {x_label}', ylabel=f'PCoA {y_label}',
-                  title=f'{measure} for Bucket(s) {bucket_nums}',
+                  title=f'{bucket_title_text}',
                   label='Bucket#')
 
     # Helper method for exporting legend as a separate figure
