@@ -113,14 +113,11 @@ def plot_pcoa_2d(metadata_fp, ordination_fp, measure,
 
     ord_rslts = skbio.OrdinationResults.read(str(ordination_fp))
     ord_2d = ord_rslts.samples.iloc[:, 0:2]
-    print(f"\n***\nSamples in ordination (n={ord_2d.shape[0]})\n***\n")
 
     metadata_in = pd.read_csv(str(metadata_fp),
                               sep='\t').set_index('sample-id')
     # filtering metadata to only include samples w/IDs present in ordination
     metadata = metadata_in.loc[ord_2d.index.values]
-    print(metadata['SampleType'].value_counts())
-    xyz = metadata[metadata['SampleType'] == 'Human Excrement Compost'].index
 
     # setting XY labels based on swap axis &
     # figure aspect based on proportion explained
@@ -308,19 +305,19 @@ def plot_pcoa_2d(metadata_fp, ordination_fp, measure,
     fecal_scatter = \
         plt.scatter(x=x_fecal, y=y_fecal, facecolors='none',
                     edgecolors='tab:brown',
-                    label=f'HE (other buckets) (n={len(x_fecal)})')
+                    label=f'HE (other buckets)')
 
     # Bulking Material - all subjects
     bulking_scatter = \
         plt.scatter(x=x_bulking, y=y_bulking, facecolors='none',
                     edgecolors='g',
-                    label=f'Bulking Material (other buckets) (n={len(x_bulking)})')
+                    label=f'Bulking Material (other buckets)')
 
     # All buckets (minus highlighted bucket(s))
     all_sample_buckets = \
         plt.scatter(x=x_buckets, y=y_buckets, facecolors='none',
                     edgecolors='#C5C9C7', marker='^',
-                    label=f'HEC (other buckets) (n={len(x_buckets)})')
+                    label=f'HEC (other buckets)')
 
     # (OPTIONAL) Weekly Mean for all Buckets
     if average == 'True':
@@ -351,24 +348,24 @@ def plot_pcoa_2d(metadata_fp, ordination_fp, measure,
     # EMP Soil
     emp_soil_scatter = plt.scatter(x=x_emp, y=y_emp,
                                    facecolors='k',
-                                   label=f'Soil (n={len(x_emp)})')
+                                   label=f'Soil')
 
     # Food Compost
     food_compost_scatter = plt.scatter(x=x_compost, y=y_compost,
                                        facecolors='r',
-                                       label=f'FLWC (n={len(x_compost)})')
+                                       label=f'FLWC')
 
     # (OPTIONAL SAMPLE TYPES) Himalaya
     if himalaya == 'True':
         himalaya_scatter = plt.scatter(x=x_hima, y=y_hima,
                                        facecolors='b',
-                                       label=f'Himalaya (n={len(x_hima)})')
+                                       label=f'Himalaya')
 
     # (OPTIONAL SAMPLE TYPES) Pit Toilet
     if pit_toilet == 'True':
         pit_toilet_scatter = plt.scatter(x=x_pt, y=y_pt,
                                          facecolors='y',
-                                         label=f'Pit Toilet (n={len(x_pt)})')
+                                         label=f'Pit Toilet')
 
     # collecting the handle info to add to the legend
     bucket_handles = []
@@ -412,12 +409,12 @@ def plot_pcoa_2d(metadata_fp, ordination_fp, measure,
 
             HE_week0_scatter = \
                 plt.scatter(x=x0_HE, y=y0_HE, facecolors='tab:brown',
-                            label=f'HE (Bucket #{bucket}) (n={len(x0_HE)})')
+                            label=f'HE (Bucket #{bucket})')
             bucket_handles.append(HE_week0_scatter)
 
             bulk_week0_scatter = \
                 plt.scatter(x=x0_bulk, y=y0_bulk, facecolors='g',
-                            label=f'Bulking Material (Bucket #{bucket}) (n={len(x0_bulk)})')
+                            label=f'Bulking Material (Bucket #{bucket})')
             bucket_handles.append(bulk_week0_scatter)
 
         for bucket, ids in buckets_dict.items():
@@ -429,7 +426,7 @@ def plot_pcoa_2d(metadata_fp, ordination_fp, measure,
                 plt.scatter(x=x_bucket, y=y_bucket,
                             facecolors=viridis(color_dict[bucket]),
                             edgecolors='k', marker='^',
-                            label=f'HEC (Bucket #{bucket}) (n={len(x_bucket)})')
+                            label=f'HEC (Bucket #{bucket})')
 
             bucket_handles.append(highlighted_bucket_scatter)
             bucket_nums.append(bucket)
