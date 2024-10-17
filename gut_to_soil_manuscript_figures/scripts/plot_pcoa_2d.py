@@ -261,9 +261,9 @@ def plot_pcoa_2d(metadata_fp, ordination_fp, measure,
 
     # ALL BUCKETS (minus highlighted bucket(s))
     all_bucket_ids = \
-        list(set(md[md['Bucket'].between(1, 16)].index.values) &
-             set(md[md['SampleType'] == 'Human Excrement Compost'].index.values) &
-             set(ord_2d.index.values))
+        list(set(md[md['Bucket'].between(1, 16)].index) &
+             set(md[md['SampleType'] == 'Human Excrement Compost'].index) &
+             set(ord_2d.index))
     if highlighted_buckets:
         bucket_ids = list(set(all_bucket_ids) - bucket_set)
     else:
@@ -305,19 +305,19 @@ def plot_pcoa_2d(metadata_fp, ordination_fp, measure,
     fecal_scatter = \
         plt.scatter(x=x_fecal, y=y_fecal, facecolors='none',
                     edgecolors='tab:brown',
-                    label=f'HE (other buckets)')
+                    label='HE (other buckets)')
 
     # Bulking Material - all subjects
     bulking_scatter = \
         plt.scatter(x=x_bulking, y=y_bulking, facecolors='none',
                     edgecolors='g',
-                    label=f'Bulking Material (other buckets)')
+                    label='Bulking Material (other buckets)')
 
     # All buckets (minus highlighted bucket(s))
     all_sample_buckets = \
         plt.scatter(x=x_buckets, y=y_buckets, facecolors='none',
                     edgecolors='#C5C9C7', marker='^',
-                    label=f'HEC (other buckets)')
+                    label='HEC (other buckets)')
 
     # (OPTIONAL) Weekly Mean for all Buckets
     if average == 'True':
@@ -326,7 +326,7 @@ def plot_pcoa_2d(metadata_fp, ordination_fp, measure,
                         y=bucket_weekly_avgs_y.values(),
                         marker='*', facecolors='#1f77b4',
                         s=100,
-                        label=f'HEC (Weekly Mean)')
+                        label='HEC (Weekly Mean)')
 
         # adding HE mean if only plotting the weekly mean
         # (w/o any highlighted bucket(s))
@@ -336,36 +336,36 @@ def plot_pcoa_2d(metadata_fp, ordination_fp, measure,
                 plt.scatter(x=x0_HE_mean, y=y0_HE_mean,
                             marker='*', s=150, zorder=1,
                             facecolors='tab:brown', edgecolors='k',
-                            label=f'HE (Weekly Mean)')
+                            label='HE (Weekly Mean)')
 
             # bulking
             bulk_week0_scatter = \
                 plt.scatter(x=x0_bulk_mean, y=y0_bulk_mean,
                             marker='*', s=150, zorder=1,
                             facecolors='g', edgecolors='k',
-                            label=f'Bulking Material (Weekly Mean)')
+                            label='Bulking Material (Weekly Mean)')
 
     # EMP Soil
     emp_soil_scatter = plt.scatter(x=x_emp, y=y_emp,
                                    facecolors='k',
-                                   label=f'Soil')
+                                   label='Soil')
 
     # Food Compost
     food_compost_scatter = plt.scatter(x=x_compost, y=y_compost,
                                        facecolors='r',
-                                       label=f'FLWC')
+                                       label='FLWC')
 
     # (OPTIONAL SAMPLE TYPES) Himalaya
     if himalaya == 'True':
         himalaya_scatter = plt.scatter(x=x_hima, y=y_hima,
                                        facecolors='b',
-                                       label=f'Himalaya')
+                                       label='Himalaya')
 
     # (OPTIONAL SAMPLE TYPES) Pit Toilet
     if pit_toilet == 'True':
         pit_toilet_scatter = plt.scatter(x=x_pt, y=y_pt,
                                          facecolors='y',
-                                         label=f'Pit Toilet')
+                                         label='Pit Toilet')
 
     # collecting the handle info to add to the legend
     bucket_handles = []
