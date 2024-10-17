@@ -484,9 +484,16 @@ def plot_pcoa_2d(metadata_fp, ordination_fp, measure,
             ax.plot([x0_bulk_mean, x1_mean], [y0_bulk_mean, y1_mean],
                     '--', color='#C5C9C7', linewidth=0.75, zorder=2)
 
+    # handling title text for buckets depending on bucket highlighting
+    if len(bucket_nums) == 0:
+        bucket_title_text = f'{measure} (all Buckets)'
+    elif len(bucket_nums) == 1:
+        bucket_title_text = f'{measure} for Bucket {bucket_nums}'
+    elif len(bucket_nums) > 1:
+        bucket_title_text = f'{measure} for Buckets {sorted(bucket_nums)}'
     # Adding title, labels & legend details
     plt.gca().set(xlabel=f'PCoA {x_label}', ylabel=f'PCoA {y_label}',
-                  title=f'{measure} for Bucket(s) {bucket_nums}',
+                  title=f'{bucket_title_text}',
                   label='Bucket#')
 
     # Helper method for exporting legend as a separate figure
