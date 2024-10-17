@@ -117,6 +117,7 @@ def plot_pcoa_2d(metadata_fp, ordination_fp, measure,
                               sep='\t').set_index('sample-id')
     # filtering metadata to only include samples w/IDs present in ordination
     metadata = metadata_in.loc[ord_2d.index.values]
+    print(metadata['SampleType2'].value_counts())
 
     # setting XY labels based on swap axis &
     # figure aspect based on proportion explained
@@ -301,18 +302,19 @@ def plot_pcoa_2d(metadata_fp, ordination_fp, measure,
     fecal_scatter = \
         plt.scatter(x=x_fecal, y=y_fecal, facecolors='none',
                     edgecolors='tab:brown',
-                    label='HE (other buckets)')
+                    label=f'HE (other buckets) (n={len(x_fecal)})')
 
     # Bulking Material - all subjects
     bulking_scatter = \
         plt.scatter(x=x_bulking, y=y_bulking, facecolors='none',
-                    edgecolors='g', label='Bulking Material (other buckets)')
+                    edgecolors='g',
+                    label=f'Bulking Material (other buckets) (n={len(x_bulking)})')
 
     # All buckets (minus highlighted bucket(s))
     all_sample_buckets = \
         plt.scatter(x=x_buckets, y=y_buckets, facecolors='none',
                     edgecolors='#C5C9C7', marker='^',
-                    label='HEC (other buckets)')
+                    label=f'HEC (other buckets) (n={len(x_buckets)})')
 
     # (OPTIONAL) Weekly Mean for all Buckets
     if average == 'True':
@@ -341,12 +343,13 @@ def plot_pcoa_2d(metadata_fp, ordination_fp, measure,
 
     # EMP Soil
     emp_soil_scatter = plt.scatter(x=x_emp, y=y_emp,
-                                   facecolors='k', label='Soil')
+                                   facecolors='k',
+                                   label=f'Soil (n={len(x_emp)})')
 
     # Food Compost
     food_compost_scatter = plt.scatter(x=x_compost, y=y_compost,
                                        facecolors='r',
-                                       label='FLWC')
+                                       label=f'FLWC (n={len(x_compost)})')
 
     # (OPTIONAL SAMPLE TYPES) Himalaya
     if himalaya == 'True':
@@ -400,12 +403,12 @@ def plot_pcoa_2d(metadata_fp, ordination_fp, measure,
 
             HE_week0_scatter = \
                 plt.scatter(x=x0_HE, y=y0_HE, facecolors='tab:brown',
-                            label=f'HE (Bucket #{bucket})')
+                            label=f'HE (Bucket #{bucket}) (n={len(x0_HE)})')
             bucket_handles.append(HE_week0_scatter)
 
             bulk_week0_scatter = \
                 plt.scatter(x=x0_bulk, y=y0_bulk, facecolors='g',
-                            label=f'Bulking Material (Bucket #{bucket})')
+                            label=f'Bulking Material (Bucket #{bucket}) (n={len(x0_bulk)})')
             bucket_handles.append(bulk_week0_scatter)
 
         for bucket, ids in buckets_dict.items():
@@ -417,7 +420,7 @@ def plot_pcoa_2d(metadata_fp, ordination_fp, measure,
                 plt.scatter(x=x_bucket, y=y_bucket,
                             facecolors=viridis(color_dict[bucket]),
                             edgecolors='k', marker='^',
-                            label=f'HEC (Bucket #{bucket})')
+                            label=f'HEC (Bucket #{bucket}) (n={len(x_bucket)})')
 
             bucket_handles.append(highlighted_bucket_scatter)
             bucket_nums.append(bucket)
