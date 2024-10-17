@@ -120,6 +120,7 @@ def plot_pcoa_2d(metadata_fp, ordination_fp, measure,
     # filtering metadata to only include samples w/IDs present in ordination
     metadata = metadata_in.loc[ord_2d.index.values]
     print(metadata['SampleType'].value_counts())
+    xyz = metadata[metadata['SampleType'] == 'Human Excrement Compost'].index
 
     # setting XY labels based on swap axis &
     # figure aspect based on proportion explained
@@ -262,11 +263,10 @@ def plot_pcoa_2d(metadata_fp, ordination_fp, measure,
             y0_bulk_mean = np.mean(y0_bulk)
 
     # ALL BUCKETS (minus highlighted bucket(s))
-    all_bucket_ids_w_fecal = \
+    all_bucket_ids = \
         list(set(md[md['Bucket'].between(1, 16)].index.values) &
+             set(md[md['SampleType'] == 'Human Excrement Compost'].index.values) &
              set(ord_2d.index.values))
-    all_bucket_ids = list(set(all_bucket_ids_w_fecal) - set(fecal_ids))
-
     if highlighted_buckets:
         bucket_ids = list(set(all_bucket_ids) - bucket_set)
     else:
@@ -329,7 +329,7 @@ def plot_pcoa_2d(metadata_fp, ordination_fp, measure,
                         y=bucket_weekly_avgs_y.values(),
                         marker='*', facecolors='#1f77b4',
                         s=100,
-                        label=f'HEC (Weekly Mean) (n={len(bucket_weekly_avgs_x)})')
+                        label=f'HEC (Weekly Mean)')
 
         # adding HE mean if only plotting the weekly mean
         # (w/o any highlighted bucket(s))
@@ -339,14 +339,14 @@ def plot_pcoa_2d(metadata_fp, ordination_fp, measure,
                 plt.scatter(x=x0_HE_mean, y=y0_HE_mean,
                             marker='*', s=150, zorder=1,
                             facecolors='tab:brown', edgecolors='k',
-                            label=f'HE (Weekly Mean) (n={len(x0_HE_mean)})')
+                            label=f'HE (Weekly Mean)')
 
             # bulking
             bulk_week0_scatter = \
                 plt.scatter(x=x0_bulk_mean, y=y0_bulk_mean,
                             marker='*', s=150, zorder=1,
                             facecolors='g', edgecolors='k',
-                            label=f'Bulking Material (Weekly Mean) (n={len(x0_bulk_mean)})')
+                            label=f'Bulking Material (Weekly Mean)')
 
     # EMP Soil
     emp_soil_scatter = plt.scatter(x=x_emp, y=y_emp,
