@@ -1,6 +1,6 @@
 # gut-to-soil-manuscript-figures
 
-A [QIIME 2](https://qiime2.org) plugin [developed](https://develop.qiime2.org) by Liz Gehret (elizabeth.gehret@nau.edu). 🔌
+A [QIIME 2](https://qiime2.org) ["Single-Use Plugin" (SUP)](https://develop.qiime2.org/en/latest/back-matter/glossary.html#term-Single-Use-Plugin-SUP) [developed](https://develop.qiime2.org) by Liz Gehret (elizabeth.gehret@nau.edu). 🔌
 
 ## Installation instructions
 
