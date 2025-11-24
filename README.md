@@ -1,6 +1,6 @@
 # gut-to-soil-manuscript-figures
 
-A [QIIME 2](https://qiime2.org) ["Single-Use Plugin" (SUP)](https://develop.qiime2.org/en/latest/back-matter/glossary.html#term-Single-Use-Plugin-SUP) [developed](https://develop.qiime2.org) by Liz Gehret (elizabeth.gehret@nau.edu). 🔌
+A [QIIME 2](https://qiime2.org) ["Single-Use Plugin" (SUP)](https://develop.qiime2.org/en/stable/back-matter/glossary.html#term-Single-Use-Plugin-SUP) [developed](https://develop.qiime2.org) by Liz Gehret (elizabeth.gehret@nau.edu). 🔌
 
 ## Installation instructions
 
@@ -107,7 +107,7 @@ Please replace the inputs with your specific distance matrix and metadata files!
 
 ## About
 
-The `gut-to-soil-manuscript-figures` Python package was [created from a template](https://develop.qiime2.org/en/latest/plugins/tutorials/create-from-template.html).
+The `gut-to-soil-manuscript-figures` Python package was [created from a template](https://develop.qiime2.org/en/stable/plugins/tutorials/create-from-template.html).
 To learn more about `gut-to-soil-manuscript-figures`, refer to the [project website](https://github.com/caporaso-lab/gut-to-coil-manuscript-figures/).
 To learn how to use QIIME 2, refer to the [QIIME 2 User Documentation](https://docs.qiime2.org).
 To learn QIIME 2 plugin development, refer to [*Developing with QIIME 2*](https://develop.qiime2.org).
