@@ -18,6 +18,7 @@ downloads/
 eggs/
 .eggs/
 lib/
+!/gut_to_soil_manuscript_figures/ridgeline-figures/distances-figs/src/lib
 lib64/
 parts/
 sdist/
